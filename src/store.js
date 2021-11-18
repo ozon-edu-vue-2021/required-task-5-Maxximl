@@ -35,24 +35,13 @@ export const store = new Vuex.Store({
     setLoadingStatus(state, isLoading) {
       state.loading = isLoading;
     },
-    addToCart(state, newProduct) {
-      const product = state.products.find(
-        (product) => product.id === newProduct.id
-      );
-      product.quantity = newProduct.quantity;
-
-      const productInCart = state.productsInCart.find(
-        (product) => product.id === newProduct.id
-      );
-      if (!productInCart) {
-        state.productsInCart.push(product);
-      }
-
-      if (!newProduct.quantity) {
-        state.productsInCart = state.productsInCart.filter(
-          (product) => product.id !== newProduct.id
-        );
-      }
+    updateProduct(state, newProduct) {
+      state.products = state.products.map((product) => {
+        if (product.id === newProduct.id) {
+          return newProduct;
+        }
+        return product;
+      });
     },
     toggleLike(state, productId) {
       const product = state.products.find((item) => item.id === productId);
@@ -67,7 +56,7 @@ export const store = new Vuex.Store({
       return state.loading;
     },
     getProductsInCard(state) {
-      return state.productsInCart;
+      return state.products.filter((product) => product.quantity);
     },
     getFavoriteProducts(state) {
       return state.products.filter((product) => product.liked);
@@ -85,6 +74,7 @@ export const store = new Vuex.Store({
             quantity: 0,
             photo: images[getRandomInt(12)],
             liked: false,
+            inCart: false,
           };
         });
         context.commit(setProducts, preparedProducts);
@@ -94,6 +84,12 @@ export const store = new Vuex.Store({
       } finally {
         context.commit("setLoadingStatus", false);
       }
+    },
+    addToCart({ commit }, newProduct) {
+      commit("updateProduct", newProduct);
+    },
+    toggleLike({ commit }, productId) {
+      commit("toggleLike", productId);
     },
   },
 });

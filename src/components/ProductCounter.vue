@@ -22,7 +22,7 @@ export default {
   },
   methods: {
     onChange() {
-      this.$store.commit("addToCart", {
+      this.$store.dispatch("addToCart", {
         ...this.product,
         quantity: this.quantity,
       });

@@ -47,13 +47,13 @@ export default {
   },
   methods: {
     addToCart() {
-      this.$store.commit("addToCart", {
+      this.$store.dispatch("addToCart", {
         ...this.product,
         quantity: this.product.quantity + 1,
       });
     },
     handleLikeClick() {
-      this.$store.commit("toggleLike", this.product.id);
+      this.$store.dispatch("toggleLike", this.product.id);
     },
   },
 };
